@@ -4,4 +4,4 @@ from django.http import HttpResponse
 
 # Create your views here.
 def home(request):
-    return HttpResponse('DIM')
+    return render(request, 'school/home.html', context={'test': 'Static'})
