@@ -1,4 +1,7 @@
+from django.contrib import admin
 from django.db import models
+from django.urls import reverse
+from django.utils.text import slugify
 
 
 class Category(models.Model):
@@ -6,12 +9,12 @@ class Category(models.Model):
     salary = models.DecimalField('ставка', max_digits=5, decimal_places=2)
 
     def __str__(self):
-        return f'<Category: {self.name}>'
+        return self.name
 
     class Meta:
         verbose_name = 'Категорія'
         verbose_name_plural = 'Категорії'
-        ordering = ['salary']
+        ordering = ['-salary']
 
 
 class Style(models.Model):
@@ -21,7 +24,7 @@ class Style(models.Model):
     slug = models.SlugField(max_length=32)
 
     def __str__(self):
-        return f'<Style: {self.name}>'
+        return self.name
 
     class Meta:
         verbose_name = 'Стиль'
@@ -32,13 +35,11 @@ class Style(models.Model):
 class Teacher(models.Model):
     first_name = models.CharField('ім’я', max_length=64)
     last_name = models.CharField('прізвище', max_length=64)
-    middle_name = models.CharField('по-батькові', max_length=64)
-    nickname = models.CharField('псевдонім', max_length=64, blank=True, default=f'{first_name} {last_name}')
-    photo = models.ImageField(upload_to='teachers/', blank=True)
-    slug = models.SlugField(max_length=50)
-    # It is often useful to automatically prepopulate a SlugField based on the value of some other value. You can
-    # do this automatically in the admin using prepopulated_fields.
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
+    middle_name = models.CharField('по-батькові', max_length=64, blank=True, null=True)
+    nickname = models.CharField('псевдонім', max_length=64, blank=True)
+    photo = models.ImageField(upload_to='teachers/', blank=True, verbose_name='фото')
+    slug = models.SlugField(max_length=50, blank=True, verbose_name='слаг')
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, verbose_name='категорія')
     styles = models.ManyToManyField(
         Style,
         verbose_name='стилі',
@@ -46,8 +47,18 @@ class Teacher(models.Model):
         related_query_name='teacher'
     )
 
+    def save(self, *args, **kwargs):
+        if not self.nickname:
+            self.nickname = f'{self.first_name} {self.last_name}'
+        if not self.slug:
+            self.slug = slugify(f'{self.first_name} {self.last_name}')
+        return super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('teacher_detail', kwargs={'slug': self.slug})
+
     def __str__(self):
-        return f'<Teacher: {self.nickname}>'
+        return self.nickname
 
     class Meta:
         verbose_name = 'Педагог'

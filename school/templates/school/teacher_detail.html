@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>{{ object.nickname }}</title>
+{% endblock %}
+
+
+{% block content %}
+<h1>{{ object.nickname }}</h1>
+<p>{{ object.category }}</p>
+<ul>
+{% for style in object.styles.all %}
+    <li>{{ style }}</li>
+{% endfor %}
+</ul>
+{% if object.photo %}
+<img src="/media/{{object.photo}}" width="200">
+{% endif %}
+{% endblock %}
