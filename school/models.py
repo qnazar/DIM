@@ -38,7 +38,7 @@ class Teacher(models.Model):
     slug = models.SlugField(max_length=50)
     # It is often useful to automatically prepopulate a SlugField based on the value of some other value. You can
     # do this automatically in the admin using prepopulated_fields.
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
     styles = models.ManyToManyField(
         Style,
         verbose_name='стилі',
