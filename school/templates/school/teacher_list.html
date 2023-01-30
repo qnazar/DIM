@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Педагоги</title>
+{% endblock %}
+
+{% block content %}
+{% for teacher in teachers %}
+<div style="margin: 2px; padding: 2px; background: grey;">
+    <h1>{{ teacher.nickname }}</h1>
+    <p>{{ teacher.category }}</p>
+    <ul>
+        {% for style in teacher.styles.all %}
+        <li>{{ style }}</li>
+        {% endfor %}
+    </ul>
+    {% if teacher.photo %}
+    <img src="/media/{{teacher.photo}}" width="200">
+    {% endif %}
+</div>
+{% endfor %}
+
+{% endblock %}

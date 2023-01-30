@@ -59,7 +59,7 @@ MIDDLEWARE = [
 ]
 
 INTERNAL_IPS = [
-    '127.0.0.7',
+    '127.0.0.1',
 ]
 
 ROOT_URLCONF = 'DIM.urls'

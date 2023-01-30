@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Стилі</title>
+{% endblock %}
+
+{% block content %}
+{% for style in styles %}
+<div style="margin: 2px; padding: 2px; background: yellow;">
+    <h1>{{ style.name }}</h1>
+    <p>{{ style.description }}</p>
+    <ul>
+      {% for teacher in style.teachers.all %}
+      <li>{{ teacher }}</li>
+      {% endfor %}
+    </ul>
+    {% if style.photo %}
+    <img src="/media/{{style.photo}}" width="200">
+    {% endif %}
+</div>
+{% endfor %}
+
+{% endblock %}

@@ -1,4 +1,3 @@
-from django.contrib import admin
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
@@ -26,9 +25,8 @@ class Style(models.Model):
     def __str__(self):
         return self.name
 
-    # TODO
-    # def get_absolute_url(self):
-    #     pass
+    def get_absolute_url(self):
+        return reverse('style_detail', kwargs={'slug': self.slug})
 
     class Meta:
         verbose_name = 'Стиль'

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>{{ style.name }}</title>
+{% endblock %}
+
+{% block content %}
+<h1>{{ style.name }}</h1>
+<p>{{ style.description }}</p>
+<h4>Педагоги:</h4>
+{% for teacher in style.teachers.all %}
+<a href="{% url 'teacher_detail' teacher.slug %}">{{ teacher.nickname }}</a><br>
+{% endfor %}
+{% if style.photo %}
+<img src="/media/{{ style.photo }}" width="200">
+{% endif %}
+{% endblock %}
