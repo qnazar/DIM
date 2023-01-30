@@ -7,11 +7,11 @@
 {% block content %}
 {% for teacher in teachers %}
 <div style="margin: 2px; padding: 2px; background: grey;">
-    <h1>{{ teacher.nickname }}</h1>
+    <h1><a href="{% url 'teacher_detail' teacher.slug %}">{{ teacher.nickname }}</a></h1>
     <p>{{ teacher.category }}</p>
     <ul>
         {% for style in teacher.styles.all %}
-        <li>{{ style }}</li>
+        <li><a href="{% url 'style_detail' style.slug %}">{{ style }}</a></li>
         {% endfor %}
     </ul>
     {% if teacher.photo %}

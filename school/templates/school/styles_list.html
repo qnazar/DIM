@@ -11,7 +11,7 @@
     <p>{{ style.description }}</p>
     <ul>
       {% for teacher in style.teachers.all %}
-      <li>{{ teacher }}</li>
+      <li><a href="{% url 'teacher_detail' teacher.slug %}">{{ teacher }}</a></li>
       {% endfor %}
     </ul>
     {% if style.photo %}

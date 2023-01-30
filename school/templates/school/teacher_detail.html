@@ -10,7 +10,7 @@
 <p>{{ object.category }}</p>
 <ul>
 {% for style in object.styles.all %}
-    <li>{{ style }}</li>
+    <li><a href="{% url 'style_detail' style.slug %}">{{ style }}</a></li>
 {% endfor %}
 </ul>
 {% if object.photo %}

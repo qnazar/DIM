@@ -25,6 +25,7 @@ class TeachersList(ListView):
     queryset = Teacher.objects.prefetch_related('styles', 'category').all()
     context_object_name = 'teachers'
     template_name = 'school/teacher_list.html'
+    # paginate_by =
 
 
 class TeacherDetail(DetailView):
