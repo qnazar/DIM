@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
@@ -100,7 +102,7 @@ class Group(models.Model):
         return f'{self.get_day_1_display()}-{self.get_day_2_display()}'
 
     def __str__(self):
-        return f'{self.style} with {self.teacher} every {self.day_1}/{self.day_2} at {self.scheduled_time}'
+        return f'{self.style} with {self.teacher} every {self.get_days} at {self.scheduled_time}'  #TODO format the time
 
     class Meta:
         verbose_name = 'Група'
