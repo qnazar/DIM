@@ -5,19 +5,29 @@
 {% endblock %}
 
 {% block content %}
-{% for teacher in teachers %}
-<div style="margin: 2px; padding: 2px; background: grey;">
-    <h1><a href="{% url 'teacher_detail' teacher.slug %}">{{ teacher.nickname }}</a></h1>
-    <p>{{ teacher.category }}</p>
-    <ul>
-        {% for style in teacher.styles.all %}
-        <li><a href="{% url 'style_detail' style.slug %}">{{ style }}</a></li>
-        {% endfor %}
-    </ul>
-    {% if teacher.photo %}
-    <img src="/media/{{teacher.photo}}" width="200">
-    {% endif %}
-</div>
-{% endfor %}
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 mx-2">
+    {% for teacher in teachers %}
+    <div class="col">
+        <div class="card h-100">
+            {% if teacher.photo %}
+            <img src="{{ style.photo }}" class="card-img-top" alt="{{ style.name }}-photo">
+            {% else %}
+            <img src="..." class="card-img-top" alt="NO PHOTO">
+            {% endif %}
+            <div class="card-body d-flex justify-content-between">
+                <h5 class="card-title"><a href="{% url 'teacher_detail' teacher.slug %}">{{ teacher.nickname }}</a>
 
+                </h5>
+                <span class="badge bg-secondary" style="color: black;">{{ teacher.category }}</span>
+            </div>
+            <div class="card-footer d-flex justify-content-evenly">
+                {% for style in teacher.styles.all %}
+                <span class="badge"><a href="{% url 'style_detail' style.slug %}">{{ style }}</a></span>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
 {% endblock %}

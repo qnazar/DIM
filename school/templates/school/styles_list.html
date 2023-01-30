@@ -5,19 +5,28 @@
 {% endblock %}
 
 {% block content %}
-{% for style in styles %}
-<div style="margin: 2px; padding: 2px; background: yellow;">
-    <h1>{{ style.name }}</h1>
-    <p>{{ style.description }}</p>
-    <ul>
-      {% for teacher in style.teachers.all %}
-      <li><a href="{% url 'teacher_detail' teacher.slug %}">{{ teacher }}</a></li>
-      {% endfor %}
-    </ul>
-    {% if style.photo %}
-    <img src="/media/{{style.photo}}" width="200">
-    {% endif %}
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 mx-2">
+    {% for style in styles %}
+    <div class="col">
+        <div class="card h-100">
+            {% if style.photo %}
+            <img src="{{ style.photo }}" class="card-img-top" alt="{{ style.name }}-photo">
+            {% else %}
+            <img src="..." class="card-img-top" alt="NO PHOTO">
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title"><a href="{% url 'style_detail' style.slug %}">{{ style.name }}</a></h5>
+                <p class="card-text">{{ style.description }}</p>
+            </div>
+            <div class="card-footer d-flex justify-content-evenly">
+                {% for teacher in style.teachers.all %}
+                <span class="badge"><a href="{% url 'teacher_detail' teacher.slug %}">{{ teacher }}</a></span>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
 </div>
-{% endfor %}
 
 {% endblock %}
