@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Style, Category, Teacher
+from .models import Style, Category, Teacher, Group
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -41,6 +41,18 @@ class TeacherAdmin(admin.ModelAdmin):
     show_link.short_description = 'Сторінка'
 
 
+class GroupAdmin(admin.ModelAdmin):
+    list_display = ('teacher', 'style', 'level', 'scheduled_time', 'get_days', 'duration', 'is_active')
+    list_filter = ('teacher', 'style', 'level')
+    list_editable = ('is_active', )
+    search_fields = ('teacher', 'style')
+
+    def get_days(self, group):
+        return group.get_days
+    get_days.short_description = 'Дні'
+
+
 admin.site.register(Style, StyleAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Teacher, TeacherAdmin)
+admin.site.register(Group, GroupAdmin)

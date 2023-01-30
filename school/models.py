@@ -26,6 +26,10 @@ class Style(models.Model):
     def __str__(self):
         return self.name
 
+    # TODO
+    # def get_absolute_url(self):
+    #     pass
+
     class Meta:
         verbose_name = 'Стиль'
         verbose_name_plural = 'Стилі'
@@ -64,3 +68,43 @@ class Teacher(models.Model):
         verbose_name = 'Педагог'
         verbose_name_plural = 'Педагоги'
         ordering = ['nickname']
+
+
+class Group(models.Model):
+    LEVEL_CHOICES = [
+        (0, 'all levels'),
+        (1, 'beginner'),
+        (2, 'middle'),
+        (3, 'advanced'),
+    ]
+
+    DAYS_CHOICES = [
+        (1, 'Mon'),
+        (2, 'Tue'),
+        (3, 'Wed'),
+        (4, 'Thu'),
+        (5, 'Fri'),
+        (6, 'Sat'),
+        (7, 'Sun'),
+    ]
+
+    teacher = models.ForeignKey('Teacher', on_delete=models.CASCADE, related_name='groups', verbose_name='педагог')
+    style = models.ForeignKey('Style', on_delete=models.CASCADE, related_name='groups', verbose_name='стиль')
+    level = models.IntegerField('рівень', default=0, blank=True, choices=LEVEL_CHOICES)
+    day_1 = models.IntegerField('день 1', choices=DAYS_CHOICES, blank=True)
+    day_2 = models.IntegerField('день 2', choices=DAYS_CHOICES, blank=True)
+    scheduled_time = models.TimeField('час')
+    duration = models.IntegerField('тривалість')
+    is_active = models.BooleanField('працює зараз', default=False, blank=True)
+
+    @property
+    def get_days(self):
+        return f'{self.get_day_1_display()}-{self.get_day_2_display()}'
+
+    def __str__(self):
+        return f'{self.style} with {self.teacher} every {self.day_1}/{self.day_2} at {self.scheduled_time}'
+
+    class Meta:
+        verbose_name = 'Група'
+        verbose_name_plural = 'Групи'
+        ordering = ['day_1', 'scheduled_time']
