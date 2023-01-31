@@ -111,3 +111,19 @@ class Group(models.Model):
         verbose_name = 'Група'
         verbose_name_plural = 'Групи'
         ordering = ['day_1', 'scheduled_time']
+
+
+class Abonement(models.Model):
+    category = models.ForeignKey(Category, verbose_name='категорія', on_delete=models.CASCADE, related_name='abonement')
+    number_of_lessons = models.PositiveSmallIntegerField('кількість занять')
+    price = models.DecimalField('ціна', max_digits=6, decimal_places=2)
+    duration = models.PositiveSmallIntegerField('тривалість')
+    photo = models.ImageField('фото', blank=True, null=True)
+
+    def __str__(self):
+        return f'{self.category}-{self.number_of_lessons}'
+
+    class Meta:
+        verbose_name = 'Абонемент'
+        verbose_name_plural = 'Абонементи'
+        ordering = ['price']

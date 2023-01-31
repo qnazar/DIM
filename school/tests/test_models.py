@@ -1,11 +1,10 @@
 import datetime
 import decimal
 
-import django.db.utils
 from django.test import TestCase
 from django.utils.text import slugify
 
-from ..models import Category, Style, Teacher, Group
+from ..models import Category, Style, Teacher, Group, Abonement
 
 
 class TestCategoryModel(TestCase):
@@ -18,15 +17,18 @@ class TestCategoryModel(TestCase):
             Category.objects.create(name='TestCatFoo', salary=100000)
 
     def test_category(self):
-        cat = Category.objects.get(pk=1)
+        cat = Category.objects.get(name='TestCat')
         self.assertTrue(isinstance(cat, Category))
         self.assertEqual(str(cat), cat.name)
 
     def test_category_salary(self):
-        cat = Category.objects.get(pk=1)
+        cat = Category.objects.get(name='TestCat')
         self.assertTrue(isinstance(cat.salary, decimal.Decimal))
         self.assertEqual(cat.salary, decimal.Decimal('100.01'))
 
+    @classmethod
+    def tearDownClass(cls):
+        Category.objects.all().delete()
 
 class TestStyleModel(TestCase):
     def setUp(self, name='Testing', description='Fake style for testing', photo=None, slug=None) -> None:
@@ -104,3 +106,23 @@ class TestGroupModel(TestCase):
     def test_get_days_property(self):
         group = Group.objects.get(pk=1)
         self.assertEqual(group.get_days, 'Mon-Thu')
+
+
+class TestAbonementModel(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        category = Category.objects.create(name='Cat', salary=100.0)
+        abonement = Abonement.objects.create(category=category, number_of_lessons=16, price=1200, duration=30,
+                                             photo=None)
+
+    def test_abonement(self):
+        abonement = Abonement.objects.get(price=1200)
+        self.assertTrue(isinstance(abonement, Abonement))
+        self.assertEqual(str(abonement), 'Cat-16')
+        self.assertTrue(isinstance(abonement.price, decimal.Decimal))
+
+    @classmethod
+    def tearDownClass(cls):
+        Category.objects.all().delete()
+        Abonement.objects.all().delete()
+
