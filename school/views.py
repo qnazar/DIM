@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import DetailView, ListView
 
-from .models import Teacher, Style, Group
+from .models import Teacher, Style, Group, Abonement
 
 
 # Create your views here.
@@ -36,3 +36,9 @@ class GroupList(ListView):
     queryset = Group.objects.select_related('style', 'teacher').all()
     context_object_name = 'groups'
     template_name = 'school/groups_list.html'
+
+
+class AbonementsList(ListView):
+    queryset = Abonement.objects.select_related('category').all()
+    context_object_name = 'abonements'
+    template_name = 'school/abonements_list.html'

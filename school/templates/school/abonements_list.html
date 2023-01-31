@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Абонементи</title>
+{% endblock %}
+
+{% block content %}
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 mx-2">
+    {% for abonement in abonements %}
+    <div class="col">
+        <div class="card h-100">
+            {% if abonement.photo %}
+            <img src="{{ abonement.photo }}" class="card-img-top" alt="{{ abonement }}-photo">
+            {% else %}
+            <img src="..." class="card-img-top" alt="NO PHOTO">
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title"><a href="#">{{ abonement }}</a></h5>
+                <p class="card-text">{{ abonement.price }} грн</p>
+            </div>
+            <div class="card-footer d-flex justify-content-evenly">
+                <span class="badge bg-secondary">{{ abonement.duration }} днів</span>
+
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
+
+{% endblock %}
