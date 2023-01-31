@@ -30,16 +30,21 @@ class TestCategoryModel(TestCase):
     def tearDownClass(cls):
         Category.objects.all().delete()
 
+
 class TestStyleModel(TestCase):
     def setUp(self, name='Testing', description='Fake style for testing', photo=None, slug=None) -> None:
         Style.objects.create(name=name, description=description, photo=photo, slug=slug)
 
     def test_style_creation(self):
-        s = Style.objects.get(pk=1)
+        s = Style.objects.get(name='Testing')
         self.assertTrue(isinstance(s, Style))
         self.assertEqual(str(s), s.name)
         self.assertEqual(s.slug, 'testing')
         self.assertEqual(s.get_absolute_url(), f'/styles/{s.slug}')
+
+    @classmethod
+    def tearDownClass(cls):
+        Style.objects.all().delete()
 
 
 class TestTeacherModel(TestCase):
@@ -64,13 +69,13 @@ class TestTeacherModel(TestCase):
         self.assertEqual(str(t), t.nickname)
         self.assertEqual(t.slug, slugify(t.nickname))
         self.assertEqual(t.get_absolute_url(), f'/teachers/{t.slug}')
-        self.assertIn(Style.objects.get(pk=1), t.styles.all())
+        self.assertIn(Style.objects.get(name='style_1'), t.styles.all())
 
     def test_category_deletion(self):
-        t = Teacher.objects.get(pk=1)
+        t = Teacher.objects.get(last_name='Howitz')
         c = Category.objects.get(name='Cat')
         c.delete()
-        t = Teacher.objects.get(pk=1)
+        t = Teacher.objects.get(last_name='Howitz')
         self.assertIs(t.category, None)
 
     @classmethod
@@ -99,13 +104,20 @@ class TestGroupModel(TestCase):
                                      is_active=True)
 
     def test_group(self):
-        group = Group.objects.get(pk=1)
+        group = Group.objects.get(level=0)
         self.assertTrue(isinstance(group, Group))
         self.assertEqual(str(group), 'TestStyle with Anna Trincher every Mon-Thu at 18:00:00')
 
     def test_get_days_property(self):
-        group = Group.objects.get(pk=1)
+        group = Group.objects.get(level=0)
         self.assertEqual(group.get_days, 'Mon-Thu')
+
+    @classmethod
+    def tearDownClass(cls):
+        Group.objects.all().delete()
+        Teacher.objects.all().delete()
+        Style.objects.all().delete()
+        Category.objects.all().delete()
 
 
 class TestAbonementModel(TestCase):
