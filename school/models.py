@@ -73,6 +73,21 @@ class Teacher(models.Model):
         ordering = ['nickname']
 
 
+class Hall(models.Model):
+    number = models.PositiveSmallIntegerField('номер')
+    square = models.DecimalField('площа', max_digits=5, decimal_places=2)
+    rent_price = models.DecimalField('ціна оренди', max_digits=6, decimal_places=2)
+    rent_for_teachers = models.DecimalField('оренда для педагогів', max_digits=6, decimal_places=2)
+
+    def __str__(self):
+        return f'Зал-{self.number}'
+
+    class Meta:
+        verbose_name = 'Зал'
+        verbose_name_plural = 'Зали'
+        ordering = ['number']
+
+
 class Group(models.Model):
     LEVEL_CHOICES = [
         (0, 'all levels'),
@@ -98,6 +113,8 @@ class Group(models.Model):
     day_2 = models.IntegerField('день 2', choices=DAYS_CHOICES, blank=True)
     scheduled_time = models.TimeField('час')
     duration = models.IntegerField('тривалість')
+    hall = models.ForeignKey(Hall, null=True, blank=True, on_delete=models.SET_NULL,
+                             related_name='groups', verbose_name='зал')
     is_active = models.BooleanField('працює зараз', default=False, blank=True)
 
     @property
@@ -105,7 +122,7 @@ class Group(models.Model):
         return f'{self.get_day_1_display()}-{self.get_day_2_display()}'
 
     def __str__(self):
-        return f'{self.style} with {self.teacher} every {self.get_days} at {self.scheduled_time}'  #TODO format the time
+        return f'{self.style} with {self.teacher} every {self.get_days} at {self.scheduled_time}'  # TODO format the time
 
     class Meta:
         verbose_name = 'Група'

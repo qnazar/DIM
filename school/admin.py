@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Style, Category, Teacher, Group, Abonement
+from .models import Style, Category, Teacher, Group, Abonement, Hall
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -58,8 +58,13 @@ class AbonementAdmin(admin.ModelAdmin):
     list_editable = ['price']
 
 
+class HallAdmin(admin.ModelAdmin):
+    list_display = ['number', 'square', 'rent_price', 'rent_for_teachers']
+
+
 admin.site.register(Style, StyleAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Teacher, TeacherAdmin)
 admin.site.register(Group, GroupAdmin)
 admin.site.register(Abonement, AbonementAdmin)
+admin.site.register(Hall, HallAdmin)

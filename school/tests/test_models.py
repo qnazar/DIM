@@ -4,7 +4,7 @@ import decimal
 from django.test import TestCase
 from django.utils.text import slugify
 
-from ..models import Category, Style, Teacher, Group, Abonement
+from ..models import Category, Style, Teacher, Group, Abonement, Hall
 
 
 class TestCategoryModel(TestCase):
@@ -93,6 +93,7 @@ class TestGroupModel(TestCase):
         teacher = Teacher.objects.create(first_name='Anna',
                                          last_name='Trincher',
                                          category=category)
+        hall = Hall.objects.create(number=1, square=100, rent_price=800, rent_for_teachers=400)
         style = Style.objects.create(name='TestStyle', slug='teststyle')
         teacher.styles.set((style,))
         group = Group.objects.create(teacher=teacher,
@@ -101,6 +102,7 @@ class TestGroupModel(TestCase):
                                      day_1=1, day_2=4,
                                      scheduled_time=datetime.time(18, 00),
                                      duration=60,
+                                     hall=hall,
                                      is_active=True)
 
     def test_group(self):
@@ -118,6 +120,7 @@ class TestGroupModel(TestCase):
         Teacher.objects.all().delete()
         Style.objects.all().delete()
         Category.objects.all().delete()
+        Hall.objects.all().delete()
 
 
 class TestAbonementModel(TestCase):
@@ -138,3 +141,17 @@ class TestAbonementModel(TestCase):
         Category.objects.all().delete()
         Abonement.objects.all().delete()
 
+
+class TestHallModel(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        Hall.objects.create(number=1, square=100, rent_price=800, rent_for_teachers=400)
+
+    def test_hall(self):
+        hall = Hall.objects.get(number=1)
+        self.assertTrue(isinstance(hall, Hall))
+        self.assertEqual(str(hall), 'Зал-1')
+
+    @classmethod
+    def tearDownClass(cls):
+        Hall.objects.all().delete()
