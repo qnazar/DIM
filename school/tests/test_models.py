@@ -1,54 +1,81 @@
 import datetime
+import decimal
 
+import django.db.utils
 from django.test import TestCase
+from django.utils.text import slugify
+
 from ..models import Category, Style, Teacher, Group
 
 
 class TestCategoryModel(TestCase):
-    def create_category(self, name, salary):
-        return Category.objects.create(name=name, salary=salary)
+    @classmethod
+    def setUpTestData(cls):
+        Category.objects.create(name='TestCat', salary=100.009)
 
     def test_category_creation(self):
-        cat = self.create_category('TestCat', 100.0)
+        with self.assertRaises(decimal.InvalidOperation):
+            Category.objects.create(name='TestCatFoo', salary=100000)
+
+    def test_category(self):
+        cat = Category.objects.get(pk=1)
         self.assertTrue(isinstance(cat, Category))
-        self.assertTrue(isinstance(cat.salary, float))
         self.assertEqual(str(cat), cat.name)
+
+    def test_category_salary(self):
+        cat = Category.objects.get(pk=1)
+        self.assertTrue(isinstance(cat.salary, decimal.Decimal))
+        self.assertEqual(cat.salary, decimal.Decimal('100.01'))
 
 
 class TestStyleModel(TestCase):
-
-    def create_style(self, name='Testing', description='Fake style for testing', photo=None, slug='testing'):
-        return Style.objects.create(name=name, description=description, photo=photo, slug=slug)
+    def setUp(self, name='Testing', description='Fake style for testing', photo=None, slug=None) -> None:
+        Style.objects.create(name=name, description=description, photo=photo, slug=slug)
 
     def test_style_creation(self):
-        s = self.create_style()
+        s = Style.objects.get(pk=1)
         self.assertTrue(isinstance(s, Style))
-        self.assertEqual(s.__str__(), s.name)
+        self.assertEqual(str(s), s.name)
+        self.assertEqual(s.slug, 'testing')
         self.assertEqual(s.get_absolute_url(), f'/styles/{s.slug}')
 
 
 class TestTeacherModel(TestCase):
-
-    def create_teacher(self, first_name, last_name, middle_name=None, nickname=None, photo=None,
-                       slug=None, category=None, styles=None):
-        t = Teacher.objects.create(first_name=first_name,
-                                   last_name=last_name,
-                                   middle_name=middle_name,
-                                   nickname=nickname,
-                                   photo=photo,
-                                   slug=slug,
+    @classmethod
+    def setUpClass(cls):
+        category = Category.objects.create(name='Cat', salary=100.0)
+        t = Teacher.objects.create(first_name='Ben',
+                                   last_name='Howitz',
+                                   middle_name=None,
+                                   nickname=None,
+                                   photo=None,
+                                   slug=None,
                                    category=category)
-        t.styles.set((Style.objects.create(name='Test1'),))
-        return t
+        style_1 = Style.objects.create(name='style_1')
+        style_2 = Style.objects.create(name='style_2')
+        t.styles.set((style_1, style_2))
 
     def test_teacher_creation(self):
-        t = self.create_teacher('Anna', 'Trincher', category=Category.objects.create(name='Test', salary=20.0))
+        t = Teacher.objects.get(first_name='Ben')
         self.assertTrue(isinstance(t, Teacher))
+        self.assertEqual(t.nickname, f'{t.first_name} {t.last_name}')
         self.assertEqual(str(t), t.nickname)
+        self.assertEqual(t.slug, slugify(t.nickname))
         self.assertEqual(t.get_absolute_url(), f'/teachers/{t.slug}')
-        self.assertEqual(t.nickname, 'Anna Trincher')
-        self.assertEqual(t.slug, 'anna-trincher')
-        self.assertIn(Style.objects.get(name='Test1'), t.styles.all())
+        self.assertIn(Style.objects.get(pk=1), t.styles.all())
+
+    def test_category_deletion(self):
+        t = Teacher.objects.get(pk=1)
+        c = Category.objects.get(name='Cat')
+        c.delete()
+        t = Teacher.objects.get(pk=1)
+        self.assertIs(t.category, None)
+
+    @classmethod
+    def tearDownClass(cls):
+        Style.objects.all().delete()
+        Teacher.objects.all().delete()
+        Category.objects.all().delete()
 
 
 class TestGroupModel(TestCase):
@@ -72,5 +99,8 @@ class TestGroupModel(TestCase):
     def test_group(self):
         group = Group.objects.get(pk=1)
         self.assertTrue(isinstance(group, Group))
-        self.assertEqual(group.get_days, 'Mon-Thu')
         self.assertEqual(str(group), 'TestStyle with Anna Trincher every Mon-Thu at 18:00:00')
+
+    def test_get_days_property(self):
+        group = Group.objects.get(pk=1)
+        self.assertEqual(group.get_days, 'Mon-Thu')

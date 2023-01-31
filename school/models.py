@@ -1,5 +1,3 @@
-import datetime
-
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
@@ -22,13 +20,18 @@ class Style(models.Model):
     name = models.CharField('стиль', max_length=64)
     description = models.TextField('опис', blank=True, null=True)
     photo = models.ImageField(upload_to='styles/', blank=True, null=True)
-    slug = models.SlugField(max_length=32)
+    slug = models.SlugField('слаг', max_length=32, blank=True)
 
     def __str__(self):
         return self.name
 
     def get_absolute_url(self):
         return reverse('style_detail', kwargs={'slug': self.slug})
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        return super().save(*args, **kwargs)
 
     class Meta:
         verbose_name = 'Стиль'

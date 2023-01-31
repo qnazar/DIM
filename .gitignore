@@ -3,3 +3,4 @@
 /school/migrations/
 /.env
 /htmlcov/
+/.coverage
