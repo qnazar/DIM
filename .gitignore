@@ -5,3 +5,5 @@
 /htmlcov/
 /.coverage
 /basket/migrations/
+/migrations/
+/authentication/migrations/

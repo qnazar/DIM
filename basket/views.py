@@ -1,10 +1,12 @@
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
 
 from school.models import Abonement
 from .basket import Basket
 
 
+@login_required()
 def basket_summary(request):
     return render(request, 'basket/basket_summary.html')
 
