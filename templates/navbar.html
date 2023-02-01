@@ -23,8 +23,12 @@
         <li class="nav-item">
           <a class="nav-link" href="{% url 'abonements_list' %}">Абонементи</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'schedule' %}">Розклад</a>
+        </li>
       </ul>
       <form class="d-flex" role="search">
+        <a href="{% url 'basket' %}">Корзина</a>
         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
         <button class="btn btn-outline-success" type="submit">Search</button>
       </form>

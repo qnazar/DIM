@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Абонемент - {{ abonement }}</title>
+{% endblock %}
+
+
+{% block content %}
+<h1>{{ abonement }}</h1>
+<p>{{ abonement.price }}</p>
+
+{% if abonement.photo %}
+<img src="/media/{{object.photo}}" width="200">
+{% endif %}
+
+<button type="button" id="add-button" value="{{ abonement.id }}">Додати в корзину</button>
+
+
+<script>
+    $(document).on('click', '#add-button', function (e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'basket_add' %}",
+            data: {
+                productid: $('#add-button').val(),
+                csrfmiddlewaretoken: "{{ csrf_token }}",
+                action: 'post',
+            },
+            success: function (json) {
+
+            },
+            error: function (xhr, errmsg, err) {}
+        });
+    })
+
+</script>
+{% endblock %}

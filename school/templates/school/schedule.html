@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Розклад</title>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center">
+    {% for day_en, day_ua in days.items %}
+    <a class="btn btn-sm btn-secondary mx-2" href="{% url 'schedule' day_en %}">{{day_ua}}</a>
+    {% endfor %}
+    <a class="btn btn-sm btn-secondary mx-2" href="{% url 'schedule' %}">Усі</a>
+</div>
+
+<div class="container-fluid">
+    <table class="table table-stripped my-2">
+        <thead>
+        <tr>
+            <th>Час</th>
+            <th>Педагог</th>
+            <th>Стиль</th>
+            <th>Дні</th>
+            <th>Рівень</th>
+            <th>Категорія</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for group in groups%}
+        <tr>
+            <td>{{ group.scheduled_time }}</td>
+            <td>{{ group.teacher }}</td>
+            <td>{{ group.style }}</td>
+            <td>{{ group.get_days }}</td>
+            <td>{{ group.get_level_display }}</td>
+            <td>{{ group.teacher.category }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

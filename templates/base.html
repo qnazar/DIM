@@ -1,15 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        {% block title %}
-        {% endblock %}
+<head>
+    <meta charset="UTF-8">
+    {% block title %}
+    {% endblock %}
 
-        {% block styles %} {% endblock %}
-    </head>
+    {% block styles %} {% endblock %}
+    <script
+            src="https://code.jquery.com/jquery-3.6.3.min.js"
+            integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU="
+            crossorigin="anonymous">
+    </script>
+</head>
 
-    <body>
-    {% block navbar %}{% include 'navbar.html' %}{% endblock  %}
-    {% block content %}{% endblock %}
-    </body>
+<body>
+{% block navbar %}{% include 'navbar.html' %}{% endblock %}
+{% block content %}{% endblock %}
+</body>
 </html>
