@@ -28,9 +28,24 @@
         </li>
       </ul>
       <form class="d-flex" role="search">
-        <a href="{% url 'basket' %}">Корзина</a>
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
+        <div class="px-5">
+
+          {% with total_qty=basket|length %}
+          <span id="basket-qty" class="badge bg-secondary">
+            {% if total_qty > 0 %}
+              {{ total_qty }}
+            {% else %}
+              0
+            {% endif %}
+          </span>
+          {% endwith %}
+
+
+          <a href="{% url 'basket' %}" class="btn btn-secondary">Корзина</a>
+
+        </div>
+
+
       </form>
     </div>
   </div>

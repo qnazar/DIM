@@ -12,8 +12,17 @@
 {% if abonement.photo %}
 <img src="/media/{{object.photo}}" width="200">
 {% endif %}
+<div class="p-5">
+    <label for="select">Кількість</label>
+    <select id="select">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+    </select>
+    <button type="button" id="add-button" value="{{ abonement.id }}">Додати в корзину</button>
+</div>
 
-<button type="button" id="add-button" value="{{ abonement.id }}">Додати в корзину</button>
 
 
 <script>
@@ -24,13 +33,16 @@
             url: "{% url 'basket_add' %}",
             data: {
                 productid: $('#add-button').val(),
+                productqty: $('#select option:selected').text(),
                 csrfmiddlewaretoken: "{{ csrf_token }}",
                 action: 'post',
             },
             success: function (json) {
-
+                document.getElementById("basket-qty").innerHTML = json.quantity;
             },
-            error: function (xhr, errmsg, err) {}
+            error: function (xhr, errmsg, err) {
+                console.log('error')
+            },
         });
     })
 

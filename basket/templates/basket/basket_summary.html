@@ -1,9 +1,114 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}
 <title>Корзина</title>
 {% endblock %}
 
+
 {% block content %}
-<h1>BASKET PAGE</h1>
+
+<main>
+    <div class="container">
+        <h1 class="h5">BASKET PAGE</h1>
+        {% for item in basket %}
+        {% with abonement=item.abonement %}
+        <div data-index="{{abonement.id}}" class="row mb-4 border product-item">
+            <div class="col-md-3 col-lg-2 order-md-first bg-light">
+                <img class="img-fluid mx-auto d-block" width="120px" alt="Responsive image"
+                     src="{{ abonement.photo }}">
+            </div>
+            <div class="col-md-9 col-lg-10 ps-md-3 ps-lg-10">
+                <a href="{{ abonement.get_absolute_url }}" class="text-decoration-none text-reset">
+                    <h1 class="h5 pt-2">{{ abonement }}</h1>
+                </a>
+                <div class="border">
+                    <div class="col border-bottom">
+                        <div class="row p-3">
+                            <div class="col-6">Ціна</div>
+                            <div class="col-6 text-end"><span class="h6 fw-bold">{{ abonement.price }} UAH</span></div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="row p-3">
+                            <div class="col-12">
+                                <label for="select{{abonement.id}}">Кількість</label>
+                                <select id="select{{abonement.id}}">
+                                    <option selected>
+                                        {{item.quantity}}
+                                    </option>
+                                    <option value="">1</option>
+                                    <option value="">2</option>
+                                    <option value="">3</option>
+                                    <option value="">4</option>
+                                </select>
+                                <button type="button" id="update-button" data-index="{{abonement.id}}"
+                                        class="btn btn-outline-secondary btn-sm update-button">
+                                    Update
+                                </button>
+                                <button type="button" id="delete-button" data-index="{{abonement.id}}"
+                                        class="btn btn-outline-secondary btn-sm delete-button">
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        {% endwith %}
+        {% endfor %}
+        <div class="col-12 text-end">
+            <div class="h6 fw-hold">Сума: <span id="subtotal">{{ basket.get_total_price }}</span> UAH</div>
+
+        </div>
+
+    </div>
+</main>
+
+<script>
+    $(document).on('click', '.delete-button', function (e) {
+        e.preventDefault();
+        let prodid = $(this).data('index');
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'basket_delete' %}",
+            data: {
+                productid: $(this).data('index'),
+                csrfmiddlewaretoken: "{{ csrf_token }}",
+                action: 'delete',
+            },
+            success: function (json) {
+                $('.product-item[data-index="'+ prodid +'"]').remove();
+                document.getElementById("basket-qty").innerHTML = json.quantity;
+                document.getElementById("subtotal").innerHTML = json.total;
+            },
+            error: function (xhr, errmsg, err) {},
+        });
+    });
+
+    // Update
+    $(document).on('click', '.update-button', function (e) {
+        e.preventDefault();
+        let prodid = $(this).data('index');
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'basket_update' %}",
+            data: {
+                productid: $(this).data('index'),
+                productqty: $('#select' + prodid + ' option:selected').text(),
+                csrfmiddlewaretoken: "{{ csrf_token }}",
+                action: 'update',
+            },
+            success: function (json) {
+                document.getElementById("basket-qty").innerHTML = json.quantity;
+                document.getElementById("subtotal").innerHTML = json.total;
+            },
+            error: function (xhr, errmsg, err) {},
+        });
+    })
+
+</script>
 {% endblock %}
