@@ -1,8 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}
-<title>Абонемент - {{ abonement }}</title>
-{% endblock %}
+{% block title %}Абонемент - {{ abonement }}{% endblock %}
 
 
 {% block content %}
@@ -30,7 +28,7 @@
         e.preventDefault();
         $.ajax({
             type: 'POST',
-            url: "{% url 'basket_add' %}",
+            url: "{% url 'basket:basket_add' %}",
             data: {
                 productid: $('#add-button').val(),
                 productqty: $('#select option:selected').text(),

@@ -26,7 +26,7 @@ class Style(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('style_detail', kwargs={'slug': self.slug})
+        return reverse('school:style_detail', kwargs={'slug': self.slug})
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -62,7 +62,7 @@ class Teacher(models.Model):
         return super().save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse('teacher_detail', kwargs={'slug': self.slug})
+        return reverse('school:teacher_detail', kwargs={'slug': self.slug})
 
     def __str__(self):
         return self.nickname
@@ -139,6 +139,9 @@ class Abonement(models.Model):
 
     def __str__(self):
         return f'{self.category}-{self.number_of_lessons}'
+
+    def get_absolute_url(self):
+        return reverse('school:abonement_detail', kwargs={'pk': self.pk})
 
     class Meta:
         verbose_name = 'Абонемент'

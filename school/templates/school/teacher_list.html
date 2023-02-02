@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-<title>Педагоги</title>
+Педагоги
 {% endblock %}
 
 {% block content %}
@@ -15,14 +15,14 @@
             <img src="..." class="card-img-top" alt="NO PHOTO">
             {% endif %}
             <div class="card-body d-flex justify-content-between">
-                <h5 class="card-title"><a href="{% url 'teacher_detail' teacher.slug %}">{{ teacher.nickname }}</a>
+                <h5 class="card-title"><a href="{% url 'school:teacher_detail' teacher.slug %}">{{ teacher.nickname }}</a>
 
                 </h5>
                 <span class="badge bg-secondary" style="color: black;">{{ teacher.category }}</span>
             </div>
             <div class="card-footer d-flex justify-content-evenly">
                 {% for style in teacher.styles.all %}
-                <span class="badge"><a href="{% url 'style_detail' style.slug %}">{{ style }}</a></span>
+                <span class="badge"><a href="{% url 'school:style_detail' style.slug %}">{{ style }}</a></span>
                 {% endfor %}
             </div>
         </div>

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-<title>Абонементи</title>
+Абонементи
 {% endblock %}
 
 {% block content %}
@@ -15,7 +15,7 @@
             <img src="..." class="card-img-top" alt="NO PHOTO">
             {% endif %}
             <div class="card-body">
-                <h5 class="card-title"><a href="{% url 'abonement_detail' abonement.pk %}">{{ abonement }}</a></h5>
+                <h5 class="card-title"><a href="{% url 'school:abonement_detail' abonement.pk %}">{{ abonement }}</a></h5>
                 <p class="card-text">{{ abonement.price }} грн</p>
             </div>
             <div class="card-footer d-flex justify-content-evenly">

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-<title>Стилі</title>
+Стилі
 {% endblock %}
 
 {% block content %}
@@ -15,12 +15,12 @@
             <img src="..." class="card-img-top" alt="NO PHOTO">
             {% endif %}
             <div class="card-body">
-                <h5 class="card-title"><a href="{% url 'style_detail' style.slug %}">{{ style.name }}</a></h5>
+                <h5 class="card-title"><a href="{% url 'school:style_detail' style.slug %}">{{ style.name }}</a></h5>
                 <p class="card-text">{{ style.description }}</p>
             </div>
             <div class="card-footer d-flex justify-content-evenly">
                 {% for teacher in style.teachers.all %}
-                <span class="badge"><a href="{% url 'teacher_detail' teacher.slug %}">{{ teacher }}</a></span>
+                <span class="badge"><a href="{% url 'school:teacher_detail' teacher.slug %}">{{ teacher }}</a></span>
                 {% endfor %}
             </div>
         </div>

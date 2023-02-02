@@ -5,26 +5,26 @@
 
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
-    <a class="navbar-brand" href="{% url 'home' %}">ДІМ</a>
+    <a class="navbar-brand" href="{% url 'school:home' %}">ДІМ</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="{% url 'styles_list' %}">Стилі</a>
+          <a class="nav-link active" aria-current="page" href="{% url 'school:styles_list' %}">Стилі</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'teachers_list' %}">Педагоги</a>
+          <a class="nav-link" href="{% url 'school:teachers_list' %}">Педагоги</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'groups_list' %}">Групи</a>
+          <a class="nav-link" href="{% url 'school:groups_list' %}">Групи</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'abonements_list' %}">Абонементи</a>
+          <a class="nav-link" href="{% url 'school:abonements_list' %}">Абонементи</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'schedule' %}">Розклад</a>
+          <a class="nav-link" href="{% url 'school:schedule' %}">Розклад</a>
         </li>
       </ul>
       <form class="d-flex" role="search">
@@ -41,7 +41,7 @@
           {% endwith %}
 
 
-          <a href="{% url 'basket' %}" class="btn btn-secondary">Корзина</a>
+          <a href="{% url 'basket:basket' %}" class="btn btn-secondary">Корзина</a>
 
         </div>
 
