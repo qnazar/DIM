@@ -95,7 +95,7 @@ WSGI_APPLICATION = 'DIM.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'db1.sqlite3',
     }
 }
 
@@ -156,6 +156,11 @@ MEDIA_ROOT = BASE_DIR / 'media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# User and authentication
+AUTH_USER_MODEL = 'authentication.MyUser'
 LOGIN_URL = '/auth/login/'
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/'  # TODO change to dashboard
 LOGOUT_REDIRECT_URL = '/auth/login/'
+
+# Email setting
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

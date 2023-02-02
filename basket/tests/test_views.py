@@ -1,13 +1,15 @@
-from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 
+from authentication.models import MyUser
 from school.models import Category, Abonement
 
 
 class TestBasketView(TestCase):
     def setUp(self):
-        User.objects.create_user(username='test', password='12345')
+        user = MyUser.objects.create_user(username='test', email='test@mail.com', password='12345')
+        user.is_active = True
+        user.save()
         cat = Category.objects.create(name='Cat', salary=100.0)
         Abonement.objects.create(category=cat, number_of_lessons=4, price=400.0, duration=30)
         Abonement.objects.create(category=cat, number_of_lessons=8, price=800.0, duration=30)

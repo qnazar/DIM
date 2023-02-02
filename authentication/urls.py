@@ -1,10 +1,12 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
 
-from .views import registration
+from .views import registration, confirm_email, dashboard
 
 urlpatterns = [
     path('registration/', registration, name='registration'),
+    path('registration/confirm_email/<slug:uidb64>/<slug:token>', confirm_email, name='confirm_email'),
+    path('dashboard/', dashboard, name='dashboard'),  # TODO move to other place
     path('login/', auth_views.LoginView.as_view(template_name='authentication/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     # path('password_change/', auth_views.PasswordChangeView.as_view(), name='password_change'),
