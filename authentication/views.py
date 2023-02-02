@@ -1,4 +1,4 @@
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpResponseRedirect, HttpResponse
@@ -7,7 +7,7 @@ from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
-from .forms import RegistrationForm
+from .forms import RegistrationForm, EditUserForm
 from .models import MyUser
 from .token import account_activation_token
 
@@ -17,6 +17,26 @@ def dashboard(request):
     return render(request,
                   'authentication/dashboard.html',
                   {'section': 'profile'})
+
+
+@login_required
+def edit_details(request):
+    if request.method == 'POST':
+        form = EditUserForm(instance=request.user, data=request.POST)
+        if form.is_valid():
+            form.save()
+    else:
+        form = EditUserForm(instance=request.user)
+    return render(request, 'authentication/edit_details.html', {'form': form})
+
+
+@login_required
+def delete_user(request):
+    user = MyUser.objects.get(username=request.user)
+    user.is_active = False
+    user.save()
+    logout(request)
+    return redirect('auth:delete_confirmation')
 
 
 def registration(request):
