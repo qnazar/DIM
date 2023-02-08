@@ -6,7 +6,7 @@ from .models import Teacher, Style, Group, Abonement
 
 
 def home(request):
-    return render(request, 'school/home.html', context={'test': 'Static'})
+    return render(request, 'school/home.html', context={'test': 'DOCKER'})
 
 
 class StylesList(ListView):

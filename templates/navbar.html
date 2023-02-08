@@ -4,49 +4,54 @@
 {% bootstrap_javascript %}
 
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="{% url 'school:home' %}">ДІМ</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="{% url 'school:styles_list' %}">Стилі</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'school:teachers_list' %}">Педагоги</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'school:groups_list' %}">Групи</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'school:abonements_list' %}">Абонементи</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'school:schedule' %}">Розклад</a>
-        </li>
-      </ul>
-      <form class="d-flex" role="search">
-        <div class="px-5">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'school:home' %}">ДІМ</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{% url 'school:styles_list' %}">Стилі</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'school:teachers_list' %}">Педагоги</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'school:groups_list' %}">Групи</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'school:abonements_list' %}">Абонементи</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'school:schedule' %}">Розклад</a>
+                </li>
+            </ul>
+                <div class="d-flex gap-1">
 
-          {% with total_qty=basket|length %}
-          <span id="basket-qty" class="badge bg-secondary">
-            {% if total_qty > 0 %}
-              {{ total_qty }}
-            {% else %}
-              0
-            {% endif %}
-          </span>
-          {% endwith %}
+                    {% if user.is_authenticated %}
+                      <div id="basket">
+                          {% with total_qty=basket|length %}
+                          <span id="basket-qty" class="badge bg-secondary">
+                            {% if total_qty > 0 %}
+                              {{ total_qty }}
+                            {% else %}
+                              0
+                            {% endif %}
+                          </span>
+                          {% endwith %}
+                          <a href="{% url 'basket:basket' %}" class="btn btn-secondary">Корзина</a>
+                    </div>
+                      <a href="{% url 'auth:logout' %}" class="btn btn-secondary">Вийти</a>
+                    {% else %}
+                      <a href="{% url 'auth:login' %}" class="btn btn-secondary">Увійти</a>
+                    {% endif %}
+
+                </div>
 
 
-          <a href="{% url 'basket:basket' %}" class="btn btn-secondary">Корзина</a>
-
+            </form>
         </div>
-
-
-      </form>
     </div>
-  </div>
 </nav>
