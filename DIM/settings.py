@@ -43,10 +43,12 @@ INSTALLED_APPS = [
 
     'debug_toolbar',
     'bootstrap5',
+    'rest_framework',
 
     'school',
     'authentication',
     'basket',
+    'api',
 ]
 
 MIDDLEWARE = [

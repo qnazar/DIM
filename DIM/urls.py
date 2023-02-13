@@ -8,6 +8,7 @@ urlpatterns = [
     path('', include(('school.urls', 'school'), namespace='school')),
     path('auth/', include(('authentication.urls', 'authentication'), namespace='auth')),
     path('basket/', include(('basket.urls', 'basket'), namespace='basket')),
+    path('api/v1/', include(('api.urls', 'api'), namespace='api')),
 ]
 
 if settings.DEBUG:
