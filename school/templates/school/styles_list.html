@@ -19,7 +19,7 @@
                 <p class="card-text">{{ style.description }}</p>
             </div>
             <div class="card-footer d-flex justify-content-evenly">
-                {% for teacher in style.teachers.all %}
+                {% for teacher in style.teachers.all|slice:":2" %}
                 <span class="badge"><a href="{% url 'school:teacher_detail' teacher.slug %}">{{ teacher }}</a></span>
                 {% endfor %}
             </div>

@@ -40,10 +40,10 @@ class Style(models.Model):
 
 
 class Teacher(models.Model):
-    first_name = models.CharField('ім’я', max_length=64)
-    last_name = models.CharField('прізвище', max_length=64)
-    middle_name = models.CharField('по-батькові', max_length=64, blank=True, null=True)
-    nickname = models.CharField('псевдонім', max_length=64, blank=True)
+    # first_name = models.CharField('ім’я', max_length=64)
+    # last_name = models.CharField('прізвище', max_length=64)
+    # middle_name = models.CharField('по-батькові', max_length=64, blank=True, null=True)
+    nickname = models.CharField('псевдонім', max_length=64)
     photo = models.ImageField(upload_to='teachers/', blank=True, verbose_name='фото')
     slug = models.SlugField(max_length=50, blank=True, verbose_name='слаг')
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, verbose_name='категорія')
@@ -53,13 +53,14 @@ class Teacher(models.Model):
         related_name='teachers',
         related_query_name='teacher'
     )
+    user = models.OneToOneField('authentication.MyUser', null=True, blank=True, on_delete=models.SET_NULL)
 
-    def save(self, *args, **kwargs):
-        if not self.nickname:
-            self.nickname = f'{self.first_name} {self.last_name}'
-        if not self.slug:
-            self.slug = slugify(f'{self.first_name} {self.last_name}')
-        return super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     if not self.nickname:
+    #         self.nickname = f'{self.first_name} {self.last_name}'
+    #     if not self.slug:
+    #         self.slug = slugify(f'{self.first_name} {self.last_name}')
+    #     return super().save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse('school:teacher_detail', kwargs={'slug': self.slug})
@@ -131,13 +132,22 @@ class Group(models.Model):
 
 
 class Abonement(models.Model):
-    category = models.ForeignKey(Category, verbose_name='категорія', on_delete=models.CASCADE, related_name='abonement')
+    category = models.ForeignKey(
+        Category,
+        verbose_name='категорія',
+        on_delete=models.CASCADE,
+        related_name='abonement',
+        null=True,
+        blank=True,
+    )
     number_of_lessons = models.PositiveSmallIntegerField('кількість занять')
     price = models.DecimalField('ціна', max_digits=6, decimal_places=2)
     duration = models.PositiveSmallIntegerField('тривалість')
     photo = models.ImageField('фото', blank=True, null=True)
 
     def __str__(self):
+        if not self.category:
+            return 'Unlimited'
         return f'{self.category}-{self.number_of_lessons}'
 
     def get_absolute_url(self):
@@ -147,3 +157,29 @@ class Abonement(models.Model):
         verbose_name = 'Абонемент'
         verbose_name_plural = 'Абонементи'
         ordering = ['price']
+
+
+class AbonementItem(models.Model):
+    abonement_type = models.ForeignKey('Abonement', related_name='items', on_delete=models.CASCADE)
+    owner = models.ForeignKey('authentication.MyUser', related_name='abonements', on_delete=models.CASCADE)
+    is_active = models.BooleanField('активний', default=False)
+    activated_date = models.DateField('Дата активації', null=True, blank=True)
+    lessons_used = models.PositiveSmallIntegerField('Використано занять', default=0)
+
+    def __str__(self):
+        return f'{self.abonement_type} - {self.owner}'
+
+    class Meta:
+        verbose_name = 'Придбаний абонемент'
+        verbose_name_plural = 'Придбані абонементи'
+        ordering = ['-activated_date']
+
+
+class Lesson(models.Model):
+    group = models.ForeignKey('Group', on_delete=models.CASCADE, related_name='lessons')
+    students = models.ManyToManyField('AbonementItem', related_name='lessons')
+
+    date = models.DateField('Дата')
+
+    def save(self, *args, **kwargs):
+        return super().save(*args, **kwargs)

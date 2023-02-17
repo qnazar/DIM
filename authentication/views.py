@@ -1,5 +1,4 @@
-from django.contrib.auth import login, logout
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login
 from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
@@ -7,36 +6,9 @@ from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
-from .forms import RegistrationForm, EditUserForm
+from .forms import RegistrationForm
 from .models import MyUser
 from .token import account_activation_token
-
-
-@login_required
-def dashboard(request):
-    return render(request,
-                  'authentication/dashboard.html',
-                  {'section': 'profile'})
-
-
-@login_required
-def edit_details(request):
-    if request.method == 'POST':
-        form = EditUserForm(instance=request.user, data=request.POST)
-        if form.is_valid():
-            form.save()
-    else:
-        form = EditUserForm(instance=request.user)
-    return render(request, 'authentication/edit_details.html', {'form': form})
-
-
-@login_required
-def delete_user(request):
-    user = MyUser.objects.get(username=request.user)
-    user.is_active = False
-    user.save()
-    logout(request)
-    return redirect('auth:delete_confirmation')
 
 
 def registration(request):
@@ -44,10 +16,10 @@ def registration(request):
         return HttpResponseRedirect('/')
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
+        print(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
-
             # EMAIL SETUP
             current_site = get_current_site(request)
             subject = 'Activate your Account'
@@ -60,6 +32,8 @@ def registration(request):
             # END EMAIL PART
 
             return render(request, 'authentication/registration_success.html')  #  HttpResponseRedirect('/')
+        else:
+            return HttpResponse(form.errors)
     else:
         form = RegistrationForm()
         return render(request, 'authentication/registration.html', {'form': form})
@@ -75,6 +49,6 @@ def confirm_email(request, uidb64, token):
         user.is_active = True
         user.save()
         login(request, user)
-        return redirect('auth:dashboard')
+        return redirect('profiles:dashboard')
     else:
         return HttpResponse('Activation invalid')

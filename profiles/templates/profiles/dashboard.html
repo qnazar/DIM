@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h1>Dashboard</h1>
+<h3>{{ user }}</h3>
+<a href="{% url 'profiles:edit_details' %}">Редагувати профіль</a>
+<a href="{% url 'auth:password_change' %}">Змінити пароль</a>
+{% if user.is_staff %}
+<a href="{% url 'profiles:annotate_lessons' %}">Відмітити заняття</a>
+{% endif %}
+{% endblock %}

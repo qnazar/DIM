@@ -6,7 +6,7 @@ from .models import Teacher, Style, Group, Abonement
 
 
 def home(request):
-    return render(request, 'school/home.html', context={'test': 'DOCKER'})
+    return render(request, 'school/home.html', context={'test': 'DIM'})
 
 
 class StylesList(ListView):
@@ -22,7 +22,7 @@ class StyleDetail(DetailView):
 
 
 class TeachersList(ListView):
-    queryset = Teacher.objects.prefetch_related('styles', 'category').all()
+    queryset = Teacher.objects.prefetch_related('styles').select_related('category').all()
     context_object_name = 'teachers'
     template_name = 'school/teacher_list.html'
 
@@ -32,7 +32,7 @@ class TeacherDetail(DetailView):
 
 
 class GroupList(ListView):
-    queryset = Group.objects.select_related('style', 'teacher').all()
+    queryset = Group.objects.select_related('style', 'teacher', 'teacher__category').all()
     context_object_name = 'groups'
     template_name = 'school/groups_list.html'
 
@@ -55,12 +55,12 @@ class Schedule(ListView):
 
     def get_queryset(self):
         if 'day' not in self.kwargs.keys():
-            return Group.objects.select_related('teacher', 'hall', 'style') \
+            return Group.objects.select_related('teacher', 'hall', 'style', 'teacher__category') \
                 .filter(is_active=True).order_by('day_1', 'scheduled_time')
 
         days = {'monday': 1, 'tuesday': 2, 'wednesday': 3, 'thursday': 4, 'friday': 5, 'saturday': 6, 'sunday': 7}
         day = days[self.kwargs['day']]
-        return Group.objects.select_related('teacher', 'hall', 'style') \
+        return Group.objects.select_related('teacher', 'hall', 'style', 'teacher__category') \
             .filter(is_active=True).filter(Q(day_1=day) | Q(day_2=day)).order_by('day_1', 'scheduled_time') \
             .order_by('day_1', 'day_2', 'scheduled_time')
 

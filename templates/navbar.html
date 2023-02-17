@@ -43,6 +43,7 @@
                           {% endwith %}
                           <a href="{% url 'basket:basket' %}" class="btn btn-secondary">Корзина</a>
                     </div>
+                      <a href="{% url 'profiles:dashboard' %}" class="btn btn-secondary">Профіль</a>
                       <a href="{% url 'auth:logout' %}" class="btn btn-secondary">Вийти</a>
                     {% else %}
                       <a href="{% url 'auth:login' %}" class="btn btn-secondary">Увійти</a>
